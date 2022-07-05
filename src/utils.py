@@ -1,6 +1,8 @@
 import neptune.new as neptune
+import numpy as np
 import pandas as pd
 import plotly.express as px
+import sklearn.decomposition
 from sklearn.metrics import precision_score, accuracy_score, recall_score
 
 
@@ -20,17 +22,18 @@ def log_raw_data(run: neptune.Run, base_namespace: str, df: pd.DataFrame):
         px.histogram(df.diagnostic)
     )
 
+    df.head(n=30).to_csv("data_sample.csv")
+    run[f"{base_namespace}/sample"].upload("data_sample.csv")
+
 
 def log_dataset(
     run: neptune.Run,
     base_namespace: str,
     data: pd.DataFrame,
     target: pd.DataFrame,
-    sample_size: int = 10,
 ):
     run[f"{base_namespace}/n_rows"] = data.shape[0]
     run[f"{base_namespace}/n_cols"] = data.shape[1]
-    run[f"{base_namespace}/sample"] = data.head(n=sample_size)
 
     run[f"{base_namespace}/target/n_Healthy"] = target.value_counts()[0]
     run[f"{base_namespace}/target/n_SARS-CoV-2"] = target.value_counts()[1]
@@ -48,3 +51,20 @@ def log_training_report(run: neptune.Run, base_namespace: str, y_data: zip):
             y_pair[0], y_pair[1]
         )
         run[f"{base_namespace}/{dataset}/recall"] = recall_score(y_pair[0], y_pair[1])
+
+
+def log_pca(run: neptune.Run, base_namespace: str, pca: sklearn.decomposition.PCA):
+    run[f"{base_namespace}/explained_variance_ratio"].log(
+        list(pca.explained_variance_ratio_)
+    )
+    run[f"{base_namespace}/singular_values"].log(list(pca.singular_values_))
+
+    exp_var = np.cumsum(pca.explained_variance_ratio_)
+
+    fig = px.area(
+        x=range(1, exp_var.shape[0] + 1),
+        y=exp_var,
+        labels={"x": "# Components", "y": "Explained Variance"},
+    )
+
+    run[f"{base_namespace}/explained_variance_chart"] = neptune.types.File.as_html(fig)
