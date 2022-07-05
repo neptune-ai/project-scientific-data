@@ -50,7 +50,7 @@ def log_training_report(run: neptune.Run, base_namespace: str, y_data: zip):
         run[f"{base_namespace}/{dataset}/accuracy"] = accuracy_score(
             y_pair[0], y_pair[1]
         )
-        # run[f"{base_namespace}/{dataset}/recall"] = recall_score(y_pair[0], y_pair[1])
+        run[f"{base_namespace}/{dataset}/recall"] = recall_score(y_pair[0], y_pair[1])
 
 
 def log_pca(run: neptune.Run, base_namespace: str, pca: PCA):
