@@ -2,7 +2,7 @@ import neptune.new as neptune
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import sklearn.decomposition
+from sklearn.decomposition import PCA
 from sklearn.metrics import precision_score, accuracy_score, recall_score
 
 
@@ -53,7 +53,7 @@ def log_training_report(run: neptune.Run, base_namespace: str, y_data: zip):
         # run[f"{base_namespace}/{dataset}/recall"] = recall_score(y_pair[0], y_pair[1])
 
 
-def log_pca(run: neptune.Run, base_namespace: str, pca: sklearn.decomposition.PCA):
+def log_pca(run: neptune.Run, base_namespace: str, pca: PCA):
     run[f"{base_namespace}/explained_variance_ratio"].log(
         list(pca.explained_variance_ratio_)
     )
