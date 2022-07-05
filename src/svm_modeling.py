@@ -16,7 +16,7 @@ run = neptune.init_run(
 
 # configuration
 config = {
-    "test_size": 0.15,
+    "test_size": 0.30,
     "val_size": 0.50,
     "scaler": True,
     "pca": True,
