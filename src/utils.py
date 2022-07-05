@@ -38,7 +38,7 @@ def log_dataset(
     run[f"{base_namespace}/target/n_Healthy"] = target.value_counts()[0]
     run[f"{base_namespace}/target/n_SARS-CoV-2"] = target.value_counts()[1]
     run[f"{base_namespace}/target/class_balance"] = neptune.types.File.as_html(
-        px.histogram(target)
+        px.histogram(target, text_auto=True)
     )
 
 
