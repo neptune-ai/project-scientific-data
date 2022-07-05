@@ -10,7 +10,6 @@ from utils import log_dataset, log_raw_data, log_training_report, log_pca
 DATA_PATH = "../data/covid_and_healthy_spectra.csv"
 
 run = neptune.init_run(
-    project="ThermoFisherScientific-Neptune-demo/project-scientific-data",
     source_files=["*.py", "../environment.yml"],
     tags="svm",
 )
