@@ -10,15 +10,18 @@ from utils import log_dataset, log_raw_data, log_training_report, log_pca
 DATA_PATH = "../data/covid_and_healthy_spectra.csv"
 
 run = neptune.init_run(
-    project="kamil/analysis", source_files=["*.py", "../environment.yml"], tags="svm"
+    project="ThermoFisherScientific-Neptune-demo/project-scientific-data",
+    source_files=["*.py", "../environment.yml"],
+    tags="svm",
 )
 
 # configuration
 config = {
     "test_size": 0.15,
     "val_size": 0.50,
+    "scaler": True,
+    "pca": True,
     "n_components": 2,
-    "scaler": False,
     "seed": 2022,
     "column_select": False,
     "nth_column": 10,
@@ -55,14 +58,15 @@ if config["scaler"]:
     X_test = scaler.transform(X_test)
     X_val = scaler.transform(X_val)
 
-pca = PCA(n_components=config["n_components"])
-pca.fit(X_train)
-X_train = pca.transform(X_train)
-X_test = pca.transform(X_test)
-X_val = pca.transform(X_val)
+if config["pca"]:
+    pca = PCA(n_components=config["n_components"])
+    pca.fit(X_train)
+    X_train = pca.transform(X_train)
+    X_test = pca.transform(X_test)
+    X_val = pca.transform(X_val)
 
-# (neptune) log PCA results
-log_pca(run=run, base_namespace="data/pca", pca=pca)
+    # (neptune) log PCA results
+    log_pca(run=run, base_namespace="data/pca", pca=pca)
 
 # (neptune) log metadata for train, valid, test
 log_dataset(run=run, base_namespace="data/train", data=X_train, target=y_train)
