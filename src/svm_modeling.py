@@ -27,7 +27,7 @@ config = {
 
 run["config"] = config
 
-# Step 1: Basic data management
+# data management
 df = pd.read_csv(DATA_PATH)
 
 # (neptune) log data version, data dimensions, target occurrences
@@ -47,7 +47,7 @@ X_test, X_val, y_test, y_val = train_test_split(
     X_test, y_test, test_size=config["val_size"], random_state=config["seed"]
 )
 
-# Step 2: Classic custom modeling pipeline and feature management
+# modeling pipeline, feature management, metrics reporting
 if config["scaler"]:
     scaler = MinMaxScaler()
     scaler.fit(X_train)
