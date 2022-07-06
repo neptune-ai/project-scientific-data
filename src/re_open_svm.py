@@ -18,7 +18,7 @@ project = neptune.get_project()
 
 # (neptune) this run
 run = neptune.init(
-    run="SCIDATA-16",
+    run="SCIDATA-26",
     capture_hardware_metrics=False,
     capture_stderr=False,
     capture_stdout=False,
@@ -72,6 +72,6 @@ y_train_pred = clf.predict(X_train)
 y_val_pred = clf.predict(X_val)
 y_test_pred = clf.predict(X_test)
 
-run["modeling/train/precision"] = recall_score(y_train, y_train_pred)
-run["modeling/valid/accuracy"] = recall_score(y_val, y_val_pred)
+run["modeling/train/recall"] = recall_score(y_train, y_train_pred)
+run["modeling/valid/recall"] = recall_score(y_val, y_val_pred)
 run["modeling/test/recall"] = recall_score(y_test, y_test_pred)
