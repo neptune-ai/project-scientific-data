@@ -60,21 +60,25 @@ optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"])
 loss_mse = nn.MSELoss(reduction="sum")
 
 # 1st training session, 3 epochs
+global_epoch = 0
 for epoch in range(config["epochs"]):
     train(run, "modeling", model, trainloader, device, optimizer, loss_mse)
     test(run, "modeling", model, testloader, device, optimizer, loss_mse)
+    global_epoch += 1
 
 # (neptune) log model weights
-torch.save(model.state_dict(), "../model/ae_model_e3.pth")
+torch.save(model.state_dict(), "../model/model.pth")
 if config["log_model"]:
-    run["modeling/model"].upload("../model/ae_model_e3.pth")
+    run[f"modeling/model_weights/epoch_{global_epoch:03d}"].upload("../model/model.pth")
+    run.wait()
 
 # 2nd training session, 20 epochs
 for epoch in range(20):
     train(run, "modeling", model, trainloader, device, optimizer, loss_mse)
     test(run, "modeling", model, testloader, device, optimizer, loss_mse)
+    global_epoch += 1
 
 # (neptune) log model weights
-torch.save(model.state_dict(), "../model/ae_model_e23.pth")
+torch.save(model.state_dict(), "../model/model.pth")
 if config["log_model"]:
-    run["modeling/model"].upload("../model/ae_model_e23.pth")
+    run[f"modeling/model_weights/epoch_{global_epoch:03d}"].upload("../model/model.pth")
