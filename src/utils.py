@@ -30,16 +30,17 @@ def log_dataset(
     run: neptune.Run,
     base_namespace: str,
     data: pd.DataFrame,
-    target: pd.Series,
+    target: pd.Series = None,
 ):
     run[f"{base_namespace}/n_rows"] = data.shape[0]
     run[f"{base_namespace}/n_cols"] = data.shape[1]
 
-    run[f"{base_namespace}/target/n_Healthy"] = target.value_counts()[0]
-    run[f"{base_namespace}/target/n_SARS-CoV-2"] = target.value_counts()[1]
-    run[f"{base_namespace}/target/class_balance"] = neptune.types.File.as_html(
-        px.histogram(target, text_auto=True)
-    )
+    if target is not None:
+        run[f"{base_namespace}/target/n_Healthy"] = target.value_counts()[0]
+        run[f"{base_namespace}/target/n_SARS-CoV-2"] = target.value_counts()[1]
+        run[f"{base_namespace}/target/class_balance"] = neptune.types.File.as_html(
+            px.histogram(target, text_auto=True)
+        )
 
 
 def log_training_report(run: neptune.Run, base_namespace: str, y_data: zip):
