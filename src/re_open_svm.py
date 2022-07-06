@@ -22,7 +22,6 @@ run = neptune.init(
     capture_hardware_metrics=False,
     capture_stderr=False,
     capture_stdout=False,
-    mode="read-only",
 )
 
 #############################
