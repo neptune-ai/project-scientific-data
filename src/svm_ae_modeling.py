@@ -64,11 +64,11 @@ run_with_model = neptune.init(
 )
 
 # (neptune) download model from the run
-run_with_model["modeling/model_weights/epoch_023"].download("model_023.pkl")
+run_with_model["modeling/model_weights/epoch_023"].download("model_023.pth")
 run_with_model.stop()
 
 model = AutoEncoder().double()
-model.load_state_dict(torch.load("model_023.pkl"))
+model.load_state_dict(torch.load("model_023.pth"))
 model.eval()
 
 # Generate embeddings for training and test data
