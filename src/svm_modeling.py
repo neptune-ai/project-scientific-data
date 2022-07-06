@@ -16,15 +16,16 @@ run = neptune.init_run(
 
 # configuration
 config = {
-    "test_size": 0.30,
+    "test_size": 0.40,
     "val_size": 0.50,
     "scaler": True,
     "pca": True,
-    "n_components": 2,
+    "n_components": 5,
     "seed": 2022,
     "column_select": False,
     "nth_column": 10,
     "log_model": True,
+    "col_840_threshold": True,
 }
 
 run["config"] = config
@@ -39,6 +40,12 @@ if config["column_select"]:
     df = df[df.columns[:: config["nth_column"]]]
 
 df.diagnostic = df.diagnostic.apply(lambda x: 1 if x == "SARS-CoV-2" else 0)
+
+# use only data where col["840"] > 0.1
+if config["col_840_threshold"]:
+    print(f"data shape before: {df.shape}")
+    df = df[df["840"] > 0.1]
+    print(f"data shape after:  {df.shape}")
 
 y = df.diagnostic
 X = df[df.columns.drop("diagnostic")]
